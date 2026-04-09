@@ -1,0 +1,7 @@
+{
+  "name": "fetch",
+  "version-semver": "0.1.0",
+  "dependencies": [
+    "openssl"
+  ]
+}
