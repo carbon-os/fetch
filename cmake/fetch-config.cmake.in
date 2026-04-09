@@ -1,0 +1,5 @@
+# cmake/fetch-config.cmake.in
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/fetch-targets.cmake")
+check_required_components(fetch)
