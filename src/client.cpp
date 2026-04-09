@@ -167,12 +167,15 @@ public:
 };
 
 void do_sse_request(const std::string& url_str, SseCallback cb, Options opts) {
-    opts.headers["Accept"] = "text/event-stream";
+    opts.headers["Accept"]        = "text/event-stream";
     opts.headers["Cache-Control"] = "no-cache";
-    opts.headers["Connection"] = "keep-alive";
+    opts.headers["Connection"]    = "keep-alive";
 
     auto url = detail::parse_url(url_str);
-    auto req = detail::build_request("GET", url, opts.headers, "");
+
+    // Respect opts.method and opts.body instead of hard-coding GET + ""
+    const std::string method = opts.method.empty() ? "GET" : opts.method;
+    auto req = detail::build_request(method, url, opts.headers, opts.body);
 
     auto execute = [&](auto& sock) {
         sock.connect(url.host, url.port, opts.timeout);
@@ -221,13 +224,13 @@ void do_sse_request(const std::string& url_str, SseCallback cb, Options opts) {
             std::string value = line.substr(colon + 1);
             if (!value.empty() && value[0] == ' ') value.erase(0, 1);
 
-            if (field == "event") ev.event = value;
+            if      (field == "event") ev.event = value;
             else if (field == "data") {
                 if (has_data) ev.data += "\n";
                 ev.data += value;
                 has_data = true;
             }
-            else if (field == "id") ev.id = value;
+            else if (field == "id")    ev.id = value;
             else if (field == "retry") { try { ev.retry = std::stoi(value); } catch(...) {} }
         }
     };
