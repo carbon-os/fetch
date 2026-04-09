@@ -1,6 +1,5 @@
 {
   "dependencies": [
-    
     "openssl",
     {
       "name": "vcpkg-cmake",
@@ -12,5 +11,5 @@
     }
   ],
   "name": "fetch",
-  "version": "0.0.2"
+  "version": "0.0.3"
 }
